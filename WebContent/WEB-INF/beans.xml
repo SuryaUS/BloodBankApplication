@@ -12,16 +12,15 @@
  	http://cxf.apache.org/schemas/jaxws.xsd
  	http://www.springframework.org/schema/context
  	http://www.springframework.org/schema/context/spring-context-4.1.xsd">
-
 	
 	<context:component-scan base-package="com.qburst.bloodbank.*" />
 
-	<jaxrs:server id="employeeService" address="/employeeservices">
+	<jaxrs:server id="userServices" address="/userService">
 		<jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
 		</jaxrs:providers>
 		<jaxrs:serviceBeans>
-			<ref bean="searchServiceImpl" />
+			<ref bean="userService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:extensionMappings>
 			<entry key="xml" value="application/xml" />
@@ -29,6 +28,19 @@
 		</jaxrs:extensionMappings>
 	</jaxrs:server>
 
-    <bean id="searchServiceImpl" class="com.qburst.bloodbank.servicesImpl.SearchServiceImpl"/>
-    <bean id="employeeDao" class="com.qburst.bloodbank.daoImpl.EmployeeDaoImpl"/>
+	<bean id="dataSource"
+	class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	   <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+	   <property name="url" value="jdbc:mysql://localhost:3306/new_schema"/>
+	   <property name="username" value="root"/>
+	   <property name="password" value="root123"/>
+	</bean>
+
+    <bean id="userService" class="com.qburst.bloodbank.servicesImpl.UserServiceImpl"/>
+    <bean id="employeeDao" class="com.qburst.bloodbank.daoImpl.EmployeeDaoImpl">
+    	<property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    
+    
 </beans>
